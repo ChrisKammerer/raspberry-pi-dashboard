@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: API Gateway -> Lambda -> DynamoDB message writer
+
+Resources:
+
+  MessagesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${AWS::StackName}-Messages'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: source
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+      KeySchema:
+        - AttributeName: source
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+
+  WriteMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: message_handlers.lambda_handler_put
+      Runtime: python3.12
+      CodeUri: src/
+      Timeout: 10
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MessagesTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MessagesTable
+      Events:
+        PutMessage:
+          Type: Api
+          Properties:
+            Path: /message
+            Method: PUT
+            RestApiId: !Ref DashboardApi
+
+  ReadMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: message_handlers.lambda_handler_get
+      Runtime: python3.12
+      CodeUri: src/
+      Timeout: 10
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MessagesTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MessagesTable
+      Events:
+        GetMessage:
+          Type: Api
+          Properties:
+            Path: /message
+            Method: GET
+            RestApiId: !Ref DashboardApi
+
+  DashboardApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      EndpointConfiguration:
+        Type: REGIONAL
+
+
+Outputs:
+  DashboardApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${DashboardApi}.execute-api.${AWS::Region}.amazonaws.com/prod/'
+  MessagesTableName:
+    Description: DynamoDB table name
+    Value: !Ref MessagesTable
