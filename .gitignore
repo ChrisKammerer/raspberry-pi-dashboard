@@ -2,3 +2,4 @@ samconfig.toml
 .aws-sam
 *.db
 *.pyc
+config.py
