@@ -2,7 +2,7 @@ import sqlite3
 import json
 
 
-DB_PATH = "src/dashboard.db"
+DB_PATH = "dashboard.db"
 
 def _get_conn():
     return sqlite3.connect(DB_PATH)
