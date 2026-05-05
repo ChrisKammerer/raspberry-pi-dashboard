@@ -3,3 +3,5 @@ samconfig.toml
 *.db
 *.pyc
 config.py
+build
+*-info

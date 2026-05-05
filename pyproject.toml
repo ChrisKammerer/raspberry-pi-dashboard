@@ -5,3 +5,6 @@ dependencies = []
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[project.scripts]
+weather-fetch = "backend.src.api_fetchers.weather:main"
