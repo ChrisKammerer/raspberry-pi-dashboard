@@ -4,7 +4,7 @@ import os
 
 
 # Get absolute path to database - ensures it works from any directory
-DB_PATH = os.path.join(os.path.dirname(__file__), "../../dashboard.db")
+DB_PATH = os.getenv("DASHBOARD_DB_PATH")
 
 def _get_conn():
     return sqlite3.connect(DB_PATH)

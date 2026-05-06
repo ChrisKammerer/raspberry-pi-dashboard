@@ -76,5 +76,5 @@ def get_next_3_hours():
     return parsed_data
 
 
-if __name__ == "__main__":
+def main():
     update_weather()

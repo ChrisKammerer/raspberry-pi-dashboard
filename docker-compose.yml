@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  dashboard:
+    build: .
+    # Mount the current directory to /app so dashboard.db is in the project root
+    volumes:
+      - .:/app
+    # working_dir: /app
+    environment:
+      - DASHBOARD_DB_PATH=/app/dashboard.db
+    command: weather-fetch
+    # restart: unless-stopped
