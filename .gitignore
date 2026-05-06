@@ -5,3 +5,4 @@ samconfig.toml
 config.py
 build
 *-info
+*.env*

@@ -1,10 +1,15 @@
 import requests
 import time
+import os
 
-from backend.config import WEATHER_API_KEY, WEATHER_LAT, WEATHER_LON, WEATHER_UNITS
+from dotenv import load_dotenv
+from backend.config import WEATHER_LAT, WEATHER_LON, WEATHER_UNITS
 from backend.src.db import init_db, upsert_cache, get_cache
 from datetime import datetime, timezone, timedelta
 
+load_dotenv()
+
+api_key = os.getenv("WEATHER_API_KEY")
 BASE_URL = "https://api.weatherapi.com/v1"
 
 def update_weather():
@@ -23,7 +28,7 @@ def update_weather():
 
 def get_current_weather():
     params = {
-        "key": WEATHER_API_KEY,
+        "key": api_key,
         "q": f"{WEATHER_LAT},{WEATHER_LON}"
     }
     response = requests.get(f"{BASE_URL}/current.json", params=params).json()
@@ -41,7 +46,7 @@ def get_current_weather():
 
 def get_forecast_weather(days):
     params = {
-        "key": WEATHER_API_KEY,
+        "key": api_key,
         "q": f"{WEATHER_LAT},{WEATHER_LON}",
         "days": days
     }

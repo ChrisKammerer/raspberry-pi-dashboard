@@ -3,8 +3,8 @@ import json
 import os
 
 
-# Get absolute path to database - ensures it works from any directory
-DB_PATH = os.getenv("DASHBOARD_DB_PATH")
+# use path defined in env variable in container or default to local file for development
+DB_PATH = os.getenv("DASHBOARD_DB_PATH", os.path.join(os.path.dirname(__file__), "../../dashboard.db"))
 
 def _get_conn():
     return sqlite3.connect(DB_PATH)
