@@ -9,6 +9,7 @@ services:
     # working_dir: /app
     environment:
       - DASHBOARD_DB_PATH=/app/dashboard.db
+    env_file:
       - .env
     command: weather-fetch
     # restart: unless-stopped
