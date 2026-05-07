@@ -8,7 +8,6 @@ services:
       - .:/app
     # working_dir: /app
     environment:
-      - DASHBOARD_DB_PATH=/app/dashboard.db
       - APP_ENV=docker
     env_file:
       - .env.docker
