@@ -8,17 +8,14 @@ WORKDIR /app
 # RUN apt-get update && apt-get install -y --no-install-recommends \
 #     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+# Copy pyproject config first for better caching
+COPY pyproject.toml ./
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the project
+# Copy the project sources
 COPY . .
 
-# Install the package itself (makes weather-fetch available)
-RUN pip install .
+# Install Python dependencies and the package
+RUN pip install --no-cache-dir .
 
 # Default command
 CMD ["weather-fetch"]
