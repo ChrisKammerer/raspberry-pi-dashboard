@@ -2,9 +2,13 @@ import sqlite3
 import json
 import os
 
+from dotenv import load_dotenv
 
+env_file = f".env.{os.getenv('APP_ENV', 'dev')}"
+load_dotenv(env_file)
 # use path defined in env variable in container or default to local file for development
-DB_PATH = os.getenv("DASHBOARD_DB_PATH", os.path.join(os.path.dirname(__file__), "../../dashboard.db"))
+DB_PATH = os.getenv("DASHBOARD_DB_PATH")
+
 
 def _get_conn():
     return sqlite3.connect(DB_PATH)
@@ -33,7 +37,8 @@ def init_db():
 
 def upsert_cache(key, data, updated_at, expires_at=None):
     with _get_conn() as conn:
-        conn.execute("""
+        conn.execute(
+            """
         INSERT INTO dashboard_cache (key, data, updated_at, expires_at, status)
         VALUES (?, ?, ?, ?, 'ok')
         ON CONFLICT(key) DO UPDATE SET
@@ -42,22 +47,24 @@ def upsert_cache(key, data, updated_at, expires_at=None):
             expires_at=excluded.expires_at,
             status='ok',
             error_message=NULL
-        """, (key, json.dumps(data), updated_at, expires_at))
+        """,
+            (key, json.dumps(data), updated_at, expires_at),
+        )
+
 
 def get_cache(key):
     with _get_conn() as conn:
-        cur = conn.execute("""
+        cur = conn.execute(
+            """
         SELECT data, updated_at, expires_at
         FROM dashboard_cache
         WHERE key = ?
-        """, (key,))
+        """,
+            (key,),
+        )
         row = cur.fetchone()
 
         if not row:
             return None
 
-        return {
-            "data": json.loads(row[0]),
-            "updated_at": row[1],
-            "expires_at": row[2]
-        }
+        return {"data": json.loads(row[0]), "updated_at": row[1], "expires_at": row[2]}

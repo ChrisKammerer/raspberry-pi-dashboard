@@ -9,7 +9,8 @@ services:
     # working_dir: /app
     environment:
       - DASHBOARD_DB_PATH=/app/dashboard.db
+      - APP_ENV=docker
     env_file:
-      - .env
+      - .env.docker
     command: weather-fetch
     # restart: unless-stopped

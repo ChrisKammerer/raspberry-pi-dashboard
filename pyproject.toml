@@ -7,6 +7,11 @@ dependencies = []
 [tool.setuptools.packages.find]
 where = ["."]
 
+[dependency-groups]
+dev = [
+    "ruff>=0.15.12",
+]
+
 [project.scripts]
 weather-fetch = "backend.src.api_fetchers.weather:main"
 calendar-fetch = "backend.src.api_fetchers.calendar:main"
