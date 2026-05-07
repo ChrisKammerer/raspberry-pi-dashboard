@@ -1,4 +1,4 @@
-.PHONY: install build run clean help
+.PHONY: install build run clean help stop exec start
 
 # Install Python package in development mode
 install:
