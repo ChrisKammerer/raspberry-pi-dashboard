@@ -11,7 +11,7 @@ DB_PATH = os.getenv("DASHBOARD_DB_PATH")
 
 
 def _get_conn():
-    return sqlite3.connect(DB_PATH)
+    return sqlite3.connect(DB_PATH, timeout=15)
 
 
 def init_db():
@@ -32,6 +32,8 @@ def init_db():
             last_rendered_at DATETIME,
             last_full_refresh_at DATETIME
             );
+                           
+        PRAGMA journal_mode=WAL;
         """)
 
 

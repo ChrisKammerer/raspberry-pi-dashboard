@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   dashboard:
     build: .
@@ -10,6 +8,8 @@ services:
     environment:
       - APP_ENV=docker
     env_file:
-      - .env.docker
-    command: weather-fetch
-    # restart: unless-stopped
+      - .env.docker 
+    stdin_open: true
+    tty: true
+    command: tail -f /dev/null
+    restart: unless-stopped
