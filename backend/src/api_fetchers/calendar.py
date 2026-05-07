@@ -20,10 +20,11 @@ class CalendarFetcher(BaseFetcher):
 
         creds = get_calendar_credentials(self.creds_path)
         events = self.get_calendar_events(creds, self.calendar_id)
+        parsed_events = self.parse_calendar_events(events)
         updated_at = self.now_utc()
         expires_at = self.expires_at(60)  # Cache for 60 minutes
 
-        upsert_cache("calendar_events", events, updated_at, expires_at)
+        upsert_cache("calendar_events", parsed_events, updated_at, expires_at)
 
     def get_calendar_events(self, creds, calendar_id, max_results=10):
         try:
@@ -44,7 +45,18 @@ class CalendarFetcher(BaseFetcher):
             return events
         except HttpError as error:
             return []
-
+    
+    def parse_calendar_events(self, events):
+        parsed_events = []
+        for event in events:
+            item = {
+                "start_time": event["start"].get("dateTime", event["start"].get("date")),
+                "end_time": event["end"].get("dateTime", event["end"].get("date")),
+                "summary": event.get("summary", ""),
+                "location": event.get("location", ""),                
+            }
+            parsed_events.append(item)
+        return parsed_events
 
 def main() -> None:
     CalendarFetcher().update_calendar()
