@@ -40,7 +40,11 @@ class WeatherFetcher(BaseFetcher):
         }
 
     def get_forecast_weather(self, days: int):
-        params = {"key": self.api_key, "q": f"{WEATHER_LAT},{WEATHER_LON}", "days": days}
+        params = {
+            "key": self.api_key,
+            "q": f"{WEATHER_LAT},{WEATHER_LON}",
+            "days": days,
+        }
         response = requests.get(f"{self.BASE_URL}/forecast.json", params=params)
         return response.json()
 

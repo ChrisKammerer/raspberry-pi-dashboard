@@ -6,3 +6,5 @@ config.py
 build
 *-info
 *.env*
+*.pickle
+*secrets.json
