@@ -45,3 +45,4 @@ dev = [
 [project.scripts]
 weather-fetch = "backend.src.api_fetchers.weather:main"
 calendar-fetch = "backend.src.api_fetchers.calendar:main"
+sports-fetch = "backend.src.api_fetchers.sports:main"
